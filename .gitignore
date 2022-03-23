@@ -1,2 +1,8 @@
 /bin/*
 /tmp/*
+
+.idea/
+*.iml
+
+.gradle/
+build/

@@ -1,0 +1,27 @@
+plugins {
+    id 'application'
+}
+
+version = '0.3-i'
+// output: build/libs/NUSPacker-{version}.jar
+
+application {
+    mainClass = 'com.tim.nuspacker.Starter'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': application.mainClassName
+        )
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
