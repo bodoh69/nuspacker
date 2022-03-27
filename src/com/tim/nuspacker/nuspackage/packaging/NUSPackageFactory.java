@@ -2,7 +2,9 @@ package com.tim.nuspacker.nuspackage.packaging;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.tim.nuspacker.nuspackage.FST;
 import com.tim.nuspacker.nuspackage.TMD;
@@ -13,12 +15,21 @@ import com.tim.nuspacker.nuspackage.fst.FSTEntries;
 import com.tim.nuspacker.nuspackage.fst.FSTEntry;
 
 public class NUSPackageFactory {
+    private static Set<String> filesToSkip = new HashSet<>();
     private static Map<Content,NUSPackage> contentDictionary = new HashMap<>();
     private static Map<FST,NUSPackage> FSTDictionary = new HashMap<>();
     private static Map<TMD,NUSPackage> TMDDictionary = new HashMap<>();
     private static Map<FSTEntries,NUSPackage> FSTEntriesDictionary = new HashMap<>();
     private static Map<Contents,NUSPackage> contentsDictionary = new HashMap<>();
-    
+
+    static {
+        filesToSkip.add(".DS_Store");
+        filesToSkip.add("desktop.ini");
+        filesToSkip.add("thumbs.db");
+        filesToSkip.add("title.fst");
+        filesToSkip.add("title.tik");
+        filesToSkip.add("title.tmd");
+    }
     
     public static NUSPackage createNewPackage(NusPackageConfiguration config){
         NUSPackage nusPackage = new NUSPackage();
@@ -139,7 +150,9 @@ public class NUSPackageFactory {
     
     public static void readFiles(File[] list,FSTEntry parent,boolean notInNUSPackage){
         for(File f : list){
-            if(!f.isDirectory()){                
+            if(!f.isDirectory()){
+                if (filesToSkip.contains(f.getName()))
+                    continue;
                 parent.addChildren(new FSTEntry(f,notInNUSPackage));    
             }
         }  
