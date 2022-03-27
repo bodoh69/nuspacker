@@ -9,12 +9,15 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 public final class CompileDate {
+    static final String NAME = "NUSPacker";
+    static final String VERSION = "0.3-j";
+    private File self;
     private long manifestTime;
     private Attributes attributes;
 
     public CompileDate() {
         try {
-            File self = new File(CompileDate.class.getProtectionDomain()
+            self = new File(CompileDate.class.getProtectionDomain()
                     .getCodeSource().getLocation().toURI());
             try (JarFile jf = new JarFile(self)) {
                 ZipEntry ze = jf.getEntry("META-INF/MANIFEST.MF");
@@ -26,17 +29,25 @@ public final class CompileDate {
         }
     }
 
+    public File getSelf() {
+        return self;
+    }
+
     public long getManifestTime() {
         return manifestTime;
     }
 
     public String getVersion() {
-        String version = attributes.getValue("Implementation-Version");
-        return version == null ? "0.3-i" : version;
+        String version = attributes == null ?
+                VERSION : attributes.getValue("Implementation-Version");
+        return version == null || version.trim().length() < 1 ?
+                VERSION : version;
     }
 
     public String getName() {
-        String title = attributes.getValue("Implementation-Title");
-        return title == null ? "NUSPacker" : title;
+        String title = attributes == null ?
+                NAME : attributes.getValue("Implementation-Title");
+        return title == null || title.trim().length() < 1 ?
+                NAME : title;
     }
 }
